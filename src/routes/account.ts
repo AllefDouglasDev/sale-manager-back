@@ -1,9 +1,10 @@
 import express from 'express'
 
-const routes = express.Router()
+import AccountController from '../controllers/AccountController'
 
-routes.post('/login', (req, res) => {
-  res.json({ success: true })
-})
+const routes = express.Router()
+const accountController = new AccountController()
+
+routes.post('/login', accountController.login)
 
 export default routes
