@@ -1,26 +1,24 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 
 import HttpStatusCode from '../enums/HttpStatusCode'
 import RequestError from './types/RequestError'
 
 interface ErrorResponse {
+  [key: string]: any
   message: string
-  response?: any
 }
 
 export default function ErrorHandler(
   error: RequestError,
   request: Request,
   response: Response,
+  next: NextFunction,
 ) {
   response.status(error.status || HttpStatusCode.INTERNAL_SERVER_ERROR)
 
   const errorResponse: ErrorResponse = {
     message: error.message,
-  }
-
-  if (error.response) {
-    errorResponse.response = error.response
+    ...error.response,
   }
 
   return response.json({ error: errorResponse })

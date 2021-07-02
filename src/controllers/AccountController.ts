@@ -1,22 +1,20 @@
 import { Request, Response, NextFunction } from 'express'
 
-import RequestError from '../exceptions/types/RequestError'
-import HttpStatusCode from '../enums/HttpStatusCode'
+import IAccountService from '../services/interfaces/IAccountService'
+import { isError } from '../utils/TypeGuards'
 
 export default class AccountController {
-  login = (request: Request, response: Response, next: NextFunction) => {
-    try {
-      const { email, password } = request.body
+  constructor(private accountService: IAccountService) {}
 
-      if (email !== 'admin@email.com' && password !== '123') {
-        return next(
-          new RequestError('Invalid credentials', HttpStatusCode.UNAUTHORIZED),
-        )
-      }
+  login = async (request: Request, response: Response, next: NextFunction) => {
+    const { email, password } = request.body
 
-      return response.json({ success: true })
-    } catch (error) {
-      return next(error)
+    const result = await this.accountService.login(email, password)
+
+    if (isError(result)) {
+      return next(result)
     }
+
+    return response.json(result)
   }
 }
