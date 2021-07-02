@@ -1,9 +1,9 @@
-import express, { Request, Response } from 'express'
+import express from 'express'
+
+import routes from './routes'
 
 const app = express()
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('running with name: ')
-})
+app.use(routes)
 
 export default app
