@@ -1,19 +1,37 @@
 ### Getting Started
 
-- Clone the project
-  `git clone https://github.com/AllefDouglasDev/sale-manager-back.git`
+#### Clone the project
 
-- Go to the project folder
-  `cd sale-manager-back`
+```
+git clone https://github.com/AllefDouglasDev/sale-manager-back.git
+```
 
-- Install all dependencies
-  `yarn`
+#### Go to the project folder
 
-- Run the project
-  `yarn dev`
+```
+cd sale-manager-back
+```
 
-- Build for production
-  `yarn build`
+#### Install all dependencies
 
-- Run in production
-  `yarn start`
+```
+yarn
+```
+
+#### Run the project
+
+```
+yarn dev
+```
+
+#### Build for production
+
+```
+yarn build
+```
+
+#### Run in production
+
+```
+yarn start
+```
