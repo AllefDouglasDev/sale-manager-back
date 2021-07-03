@@ -5,6 +5,7 @@ export class UserDTO {
   firstName: string
   lastName: string
   email: string
+  phone: string
   createdAt: Date
   updatedAt: Date
 
@@ -14,6 +15,7 @@ export class UserDTO {
       firstName: '',
       lastName: '',
       email: '',
+      phone: '',
       createdAt: new Date(),
       updatedAt: new Date(),
     }

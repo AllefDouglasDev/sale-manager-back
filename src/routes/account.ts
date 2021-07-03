@@ -7,6 +7,7 @@ export default function Router(container: Container) {
   const routes = express.Router()
   const accountController = new AccountController(container)
 
+  routes.post('/register', accountController.register)
   routes.post('/login', accountController.login)
 
   return routes
