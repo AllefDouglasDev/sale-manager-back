@@ -1,3 +1,3 @@
-export function isError(value: Error | any): value is Error {
+export function isError(value: any): value is Error {
   return value instanceof Error
 }

@@ -1,11 +1,13 @@
 import express from 'express'
 
+import Container from '../container'
 import AccountController from '../controllers/AccountController'
-import AccountService from '../services/AccountService'
 
-const routes = express.Router()
-const accountController = new AccountController(new AccountService())
+export default function Router(container: Container) {
+  const routes = express.Router()
+  const accountController = new AccountController(container)
 
-routes.post('/login', accountController.login)
+  routes.post('/login', accountController.login)
 
-export default routes
+  return routes
+}

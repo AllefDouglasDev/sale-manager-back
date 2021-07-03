@@ -1,4 +1,4 @@
-import HttpStatusCode from '../../enums/HttpStatusCode'
+import HttpStatusCode from '../enums/HttpStatusCode'
 
 export default class RequestError<Response = any> extends Error {
   status: HttpStatusCode

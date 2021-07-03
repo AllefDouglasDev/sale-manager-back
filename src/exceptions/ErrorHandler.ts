@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 
 import HttpStatusCode from '../enums/HttpStatusCode'
-import RequestError from './types/RequestError'
+import RequestError from './RequestError'
 
 interface ErrorResponse {
   [key: string]: any
