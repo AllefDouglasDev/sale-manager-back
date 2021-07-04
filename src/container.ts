@@ -1,3 +1,4 @@
+import Database, { IDatabase } from './config/database'
 import AccountService from './services/AccountService'
 import IAccountService from './services/interfaces/IAccountService'
 
@@ -6,7 +7,14 @@ type Services = {
 }
 
 export default class Container {
-  services: Services = {
-    accountService: new AccountService(),
+  database: IDatabase
+  services: Services
+
+  constructor() {
+    this.database = Database()
+
+    this.services = {
+      accountService: new AccountService(this.database),
+    }
   }
 }

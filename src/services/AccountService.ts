@@ -3,8 +3,11 @@ import HttpStatusCode from '../enums/HttpStatusCode'
 import IAccountService from './interfaces/IAccountService'
 import User from '../entities/User'
 import { LoginDTO, RegisterDTO } from '../models/account'
+import { IDatabase } from '../config/database'
 
 export default class AccountService implements IAccountService {
+  constructor(private db: IDatabase) {}
+
   async register(registerDTO: RegisterDTO): Promise<User | RequestError> {
     return {
       id: 1,
@@ -20,23 +23,23 @@ export default class AccountService implements IAccountService {
   }
 
   async login({ email, password }: LoginDTO): Promise<User | RequestError> {
-    if (email !== 'admin@email.com' || password !== '123') {
-      return new RequestError(
-        'Invalid credentials',
-        HttpStatusCode.UNAUTHORIZED,
+    try {
+      const { rows } = await this.db.query<User>(
+        'SELECT * FROM users WHERE email=$1 AND password=$2 LIMIT 1',
+        [email, password],
       )
-    }
 
-    return {
-      id: 1,
-      firstName: 'admin',
-      lastName: 'super',
-      phone: '81 98905-4334',
-      email,
-      password,
-      active: true,
-      updatedAt: new Date(),
-      createdAt: new Date(),
+      if (!rows.length) {
+        return new RequestError(
+          'Invalid credentials',
+          HttpStatusCode.UNAUTHORIZED,
+        )
+      }
+
+      return rows[0]
+    } catch (err) {
+      console.log(err)
+      return new RequestError(err.message, HttpStatusCode.INTERNAL_SERVER_ERROR)
     }
   }
 }
