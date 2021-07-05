@@ -3,42 +3,61 @@ import HttpStatusCode from '../enums/HttpStatusCode'
 import IAccountService from './interfaces/IAccountService'
 import User from '../entities/User'
 import { LoginDTO, RegisterDTO } from '../models/account'
-import { IDatabase } from '../config/database'
+import Container from '../container'
+import IUserRepository from '../repositories/interfaces/IUserRepository'
 
 export default class AccountService implements IAccountService {
-  constructor(private db: IDatabase) {}
+  userRepository: IUserRepository
 
-  async register(registerDTO: RegisterDTO): Promise<User | RequestError> {
-    return {
-      id: 1,
-      firstName: registerDTO.firstName,
-      lastName: registerDTO.lastName,
-      phone: registerDTO.phone,
-      email: registerDTO.email,
-      password: registerDTO.password,
-      active: true,
-      updatedAt: new Date(),
-      createdAt: new Date(),
+  constructor(private container: Container) {
+    this.userRepository = this.container.repositories.userRepository
+  }
+
+  async findUserById(id: number) {
+    try {
+      const user = await this.userRepository.findOne(id)
+
+      if (!user) {
+        return new RequestError('User not found', HttpStatusCode.NOT_FOUND)
+      }
+
+      return user
+    } catch (err) {
+      return new RequestError(err.message, HttpStatusCode.INTERNAL_SERVER_ERROR)
     }
   }
 
-  async login({ email, password }: LoginDTO): Promise<User | RequestError> {
+  async register(registerDTO: RegisterDTO) {
     try {
-      const { rows } = await this.db.query<User>(
-        'SELECT * FROM users WHERE email=$1 AND password=$2 LIMIT 1',
-        [email, password],
+      const user = await this.userRepository.create(registerDTO)
+
+      const token = await this.container.services.jwtService.create(
+        user?.id || 0,
       )
 
-      if (!rows.length) {
+      return { user, token }
+    } catch (err) {
+      return new RequestError(err.message, HttpStatusCode.INTERNAL_SERVER_ERROR)
+    }
+  }
+
+  async login({ email, password }: LoginDTO) {
+    try {
+      const user = await this.userRepository.findByEmail(email)
+
+      if (!user || user.password !== password) {
         return new RequestError(
           'Invalid credentials',
           HttpStatusCode.UNAUTHORIZED,
         )
       }
 
-      return rows[0]
+      const token = await this.container.services.jwtService.create(
+        user?.id || 0,
+      )
+
+      return { user, token }
     } catch (err) {
-      console.log(err)
       return new RequestError(err.message, HttpStatusCode.INTERNAL_SERVER_ERROR)
     }
   }

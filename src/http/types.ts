@@ -9,7 +9,9 @@ export type Request<
   ResponseBody = any,
   Params = any,
   Query = any,
-> = ExpressRequest<Params, ResponseBody, RequestBody, Query>
+> = ExpressRequest<Params, ResponseBody, RequestBody, Query> & {
+  userId?: number
+}
 
 export type Response<ResponseBody = any> = ExpressResponse<ResponseBody>
 export type NextFunction = ExpressNextFunction
