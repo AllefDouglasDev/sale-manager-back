@@ -35,3 +35,9 @@ yarn build
 ```
 yarn start
 ```
+
+#### Database
+
+You can create the database running the script inside the file database/CREATE_TABLE.sql
+
+You can change the database connection changing the file src/config/database.ts
