@@ -12,7 +12,7 @@ export default class AccountController extends Controller {
   constructor(protected container: Container) {
     super(container)
 
-    this.accountService = container.services?.accountService
+    this.accountService = container.accountService
   }
 
   register = async (

@@ -9,30 +9,42 @@ import IAccountService from './services/interfaces/IAccountService'
 import IUserRepository from './repositories/interfaces/IUserRepository'
 import UserRepository from './repositories/UserRepository'
 
-type Repositories = {
-  userRepository: IUserRepository
-}
-
-type Services = {
-  jwtService: IJWTService
-  accountService: IAccountService
-}
-
 export default class Container {
+  // repositories
+  private _userRepository: IUserRepository
+  // services
+  private _jwtService: IJWTService
+  private _accountService: IAccountService
+
   database: IDatabase
-  services: Services
-  repositories: Repositories
 
   constructor() {
     this.database = Database()
+  }
 
-    this.repositories = {
-      userRepository: new UserRepository(this.database),
+  // Repositories
+  get userRepository(): IUserRepository {
+    if (!this._userRepository) {
+      this._userRepository = new UserRepository(this.database)
     }
 
-    this.services = {
-      jwtService: new JWTService(),
-      accountService: new AccountService(this),
+    return this._userRepository
+  }
+
+  // Services
+  get jwtService(): IJWTService {
+    if (!this._jwtService) {
+      this._jwtService = new JWTService()
     }
+
+    return this._jwtService
+  }
+
+  get accountService(): IAccountService {
+    if (!this._accountService) {
+      this._accountService = new AccountService(this)
+    }
+
+    return this._accountService
   }
 }
