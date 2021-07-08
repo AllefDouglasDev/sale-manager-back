@@ -1,33 +1,34 @@
-import { Request, Response, NextFunction } from 'express'
-
-import IAccountService from '../services/interfaces/IAccountService'
+import { Request, Response, NextFunction } from '../http/types'
+import IClientService from '../services/interfaces/IClientService'
 import Container from '../container'
 import { isError } from '../utils/TypeGuards'
+import { CreateClientDTO, ClientDTO } from '../models/client'
+import HttpStatusCode from '../enums/HttpStatusCode'
 
 export default class AccountController {
-  private _accountService: IAccountService
+  private _clientService: IClientService
 
   constructor(private container: Container) {
-    this._accountService = this.container.accountService
+    this._clientService = this.container.clientService
   }
 
-  index = async (request: Request, response: Response, next: NextFunction) => {
-    try {
-      const result = await this._accountService.listUsers()
-
-      if (isError(result)) {
-        return next(result)
-      }
-
-      return response.json(result)
-    } catch (error) {
-      return next(error)
-    }
-  }
+  index = async (request: Request, response: Response, next: NextFunction) => {}
 
   show = (request: Request, response: Response, next: NextFunction) => {}
 
-  create = (request: Request, response: Response, next: NextFunction) => {}
+  create = async (
+    request: Request<CreateClientDTO>,
+    response: Response<ClientDTO>,
+    next: NextFunction,
+  ) => {
+    const result = await this._clientService.create(request.body)
+
+    if (isError(result)) {
+      return next(result)
+    }
+
+    return response.status(HttpStatusCode.CREATED).json(ClientDTO.from(result))
+  }
 
   update = (request: Request, response: Response, next: NextFunction) => {}
 
