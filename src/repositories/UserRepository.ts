@@ -23,8 +23,10 @@ export default class UserRepository implements IUserRepository {
     return data.length ? data[0] : null
   }
 
-  findAll(id: number): Promise<User[]> {
-    throw new Error('Method not implemented.')
+  async findAll(): Promise<User[]> {
+    const { data } = await this.db.query<User>('SELECT * FROM users')
+
+    return data
   }
 
   async create(user: User): Promise<User> {

@@ -1,13 +1,35 @@
 import { Request, Response, NextFunction } from 'express'
 
+import IAccountService from '../services/interfaces/IAccountService'
+import Container from '../container'
+import { isError } from '../utils/TypeGuards'
+
 export default class AccountController {
-  index: (request: Request, response: Response, next: NextFunction) => {}
+  private _accountService: IAccountService
 
-  show: (request: Request, response: Response, next: NextFunction) => {}
+  constructor(private container: Container) {
+    this._accountService = this.container.accountService
+  }
 
-  create: (request: Request, response: Response, next: NextFunction) => {}
+  index = async (request: Request, response: Response, next: NextFunction) => {
+    try {
+      const result = await this._accountService.listUsers()
 
-  update: (request: Request, response: Response, next: NextFunction) => {}
+      if (isError(result)) {
+        return next(result)
+      }
 
-  delete: (request: Request, response: Response, next: NextFunction) => {}
+      return response.json(result)
+    } catch (error) {
+      return next(error)
+    }
+  }
+
+  show = (request: Request, response: Response, next: NextFunction) => {}
+
+  create = (request: Request, response: Response, next: NextFunction) => {}
+
+  update = (request: Request, response: Response, next: NextFunction) => {}
+
+  delete = (request: Request, response: Response, next: NextFunction) => {}
 }

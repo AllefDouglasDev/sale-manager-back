@@ -16,4 +16,5 @@ export default interface IAccountService {
   login(loginDTO: LoginDTO): Promise<Login | RequestError>
   register(registerDTO: RegisterDTO): Promise<Register | RequestError>
   findUserById(id: number): Promise<User | RequestError>
+  listUsers(): Promise<User[] | RequestError>
 }

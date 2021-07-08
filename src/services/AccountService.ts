@@ -16,6 +16,16 @@ export default class AccountService implements IAccountService {
     this._jwtService = this.container.jwtService
   }
 
+  async listUsers() {
+    try {
+      const users = await this._userRepository.findAll()
+
+      return users
+    } catch (err) {
+      return new RequestError(err.message, HttpStatusCode.INTERNAL_SERVER_ERROR)
+    }
+  }
+
   async findUserById(id: number) {
     try {
       const user = await this._userRepository.findOne(id)
