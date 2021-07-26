@@ -5,7 +5,10 @@
     "dev": "nodemon --watch 'src/' --exec 'ts-node src/index.ts' -e ts",
     "start": "node dist/index.js",
     "build": "babel src --out-dir dist --copy-files --extensions '.ts,.js'",
-    "test": "jest"
+    "test": "jest",
+    "test:w": "jest --watch",
+    "test:c": "jest --collectCoverage",
+    "test:all": "jest --watch --collectCoverage"
   },
   "dependencies": {
     "express": "^4.17.1",
