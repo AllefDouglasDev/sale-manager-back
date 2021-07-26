@@ -2,17 +2,6 @@ import Database from '../../../src/config/database'
 import Client from '../../../src/entities/Client'
 import ClientRepository from '../../../src/repositories/ClientRepository'
 
-// async function createClient(
-//   clientRepository: ClientRepository,
-// ): Promise<Client> {
-//   const data: Client = {
-//     userId: 1,
-//     name: 'My Client',
-//   }
-
-//   return clientRepository.create(data)
-// }
-
 describe('Unit - ClientRepository', () => {
   const clientRepository = new ClientRepository(Database())
 
