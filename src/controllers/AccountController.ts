@@ -12,12 +12,12 @@ export default class AccountController extends Controller {
   constructor(protected container: Container) {
     super(container)
 
-    this.accountService = container.services.accountService
+    this.accountService = container.accountService
   }
 
   register = async (
     request: Request<RegisterDTO>,
-    response: Response<UserDTO>,
+    response: Response<{ token: string; user: UserDTO }>,
     next: NextFunction,
   ) => {
     const result = await this.accountService.register(request.body)
@@ -26,15 +26,31 @@ export default class AccountController extends Controller {
       return next(result)
     }
 
-    return response.json(UserDTO.from(result))
+    return response.json({
+      token: result.token,
+      user: UserDTO.from(result.user),
+    })
   }
 
   login = async (
     request: Request<LoginDTO>,
-    response: Response<UserDTO>,
+    response: Response<{ token: string; user: UserDTO }>,
     next: NextFunction,
   ) => {
     const result = await this.accountService.login(request.body)
+
+    if (isError(result)) {
+      return next(result)
+    }
+
+    return response.json({
+      token: result.token,
+      user: UserDTO.from(result.user),
+    })
+  }
+
+  me = async (request: Request, response: Response, next: NextFunction) => {
+    const result = await this.accountService.findUserById(request?.userId || 0)
 
     if (isError(result)) {
       return next(result)

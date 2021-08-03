@@ -7,6 +7,7 @@
     "rootDir": "./src",
     "strict": true,
     "strictPropertyInitialization": false,
+    "declaration": true,
     "moduleResolution": "node",
     "baseUrl": "./src",
     "allowSyntheticDefaultImports": true,
@@ -16,18 +17,7 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "noImplicitAny": true,
-    "typeRoots": ["./node_modules/@types", "./@types"],
-    "paths": {
-      "@configs/*": ["configs/*"],
-      "@controllers/*": ["controllers/*"],
-      "@database/*": ["database/*"],
-      "@exceptions/*": ["exceptions/*"],
-      "@middlewares/*": ["middlewares/*"],
-      "@models/*": ["models/*"],
-      "@services/*": ["services/*"],
-      "@utils/*": ["utils/*"],
-      "@validators/*": ["validators/*"]
-    }
+    "typeRoots": ["./node_modules/@types", "./@types"]
   },
   "include": ["src"],
   "exclude": ["node_modules"]

@@ -10,4 +10,8 @@ export default class RequestError<Response = any> extends Error {
     this.status = status || HttpStatusCode.INTERNAL_SERVER_ERROR
     this.response = response
   }
+
+  static internalServerError<R = any>(message: string): RequestError<R> {
+    return new RequestError<R>(message, HttpStatusCode.INTERNAL_SERVER_ERROR)
+  }
 }
