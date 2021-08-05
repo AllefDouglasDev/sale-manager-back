@@ -1,24 +1,19 @@
 import RequestError from '../exceptions/RequestError'
 import HttpStatusCode from '../enums/HttpStatusCode'
 import IAccountService from './interfaces/IAccountService'
-import User from '../entities/User'
 import { LoginDTO, RegisterDTO } from '../models/account'
-import Container from '../container'
 import IUserRepository from '../repositories/interfaces/IUserRepository'
 import IJWTService from './interfaces/IJWTService'
 
 export default class AccountService implements IAccountService {
-  private _userRepository: IUserRepository
-  private _jwtService: IJWTService
-
-  constructor(private container: Container) {
-    this._userRepository = this.container.userRepository
-    this._jwtService = this.container.jwtService
-  }
+  constructor(
+    private userRepository: IUserRepository,
+    private jwtService: IJWTService,
+  ) {}
 
   async listUsers() {
     try {
-      const users = await this._userRepository.findAll()
+      const users = await this.userRepository.findAll()
 
       return users
     } catch (err) {
@@ -28,7 +23,7 @@ export default class AccountService implements IAccountService {
 
   async findUserById(id: number) {
     try {
-      const user = await this._userRepository.findOne(id)
+      const user = await this.userRepository.findOne(id)
 
       if (!user) {
         return new RequestError('User not found', HttpStatusCode.NOT_FOUND)
@@ -42,9 +37,9 @@ export default class AccountService implements IAccountService {
 
   async register(registerDTO: RegisterDTO) {
     try {
-      const user = await this._userRepository.create(registerDTO)
+      const user = await this.userRepository.create(registerDTO)
 
-      const token = await this._jwtService.create(user?.id || 0)
+      const token = await this.jwtService.create(user?.id || 0)
 
       return { user, token }
     } catch (err) {
@@ -54,7 +49,7 @@ export default class AccountService implements IAccountService {
 
   async login({ email, password }: LoginDTO) {
     try {
-      const user = await this._userRepository.findByEmail(email)
+      const user = await this.userRepository.findByEmail(email)
 
       if (!user || user.password !== password) {
         return new RequestError(
@@ -63,7 +58,7 @@ export default class AccountService implements IAccountService {
         )
       }
 
-      const token = await this._jwtService.create(user?.id || 0)
+      const token = await this.jwtService.create(user?.id || 0)
 
       return { user, token }
     } catch (err) {

@@ -14,14 +14,6 @@ import IClientRepository from './repositories/interfaces/IClientRepository'
 import ClientRepository from './repositories/ClientRepository'
 
 export default class Container {
-  // repositories
-  private _userRepository: IUserRepository
-  private _clientRepository: IClientRepository
-  // services
-  private _jwtService: IJWTService
-  private _accountService: IAccountService
-  private _clientService: IClientService
-
   database: IDatabase
 
   constructor() {
@@ -30,43 +22,23 @@ export default class Container {
 
   // Repositories
   get userRepository(): IUserRepository {
-    if (!this._userRepository) {
-      this._userRepository = new UserRepository(this.database)
-    }
-
-    return this._userRepository
+    return new UserRepository(this.database)
   }
 
   get clientRepository(): IClientRepository {
-    if (!this._clientRepository) {
-      this._clientRepository = new ClientRepository(this.database)
-    }
-
-    return this._clientRepository
+    return new ClientRepository(this.database)
   }
 
   // Services
   get jwtService(): IJWTService {
-    if (!this._jwtService) {
-      this._jwtService = new JWTService()
-    }
-
-    return this._jwtService
+    return new JWTService()
   }
 
   get accountService(): IAccountService {
-    if (!this._accountService) {
-      this._accountService = new AccountService(this)
-    }
-
-    return this._accountService
+    return new AccountService(this.userRepository, this.jwtService)
   }
 
   get clientService(): IClientService {
-    if (!this._clientService) {
-      this._clientService = new ClientService(this)
-    }
-
-    return this._clientService
+    return new ClientService(this.clientRepository)
   }
 }
